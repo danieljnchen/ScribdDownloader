@@ -18,14 +18,14 @@ public class ScribdDownloader {
         docNum = docNum.substring(docNum.indexOf("/")+1);
         docNum = docNum.substring(0,docNum.indexOf("/"));
 
-        File images = new File(System.getProperty("user.dir") + "/images");
-        if(!images.exists()) {
-            images.mkdir();
+        File ScribdDownloads = new File(System.getProperty("user.dir") + "/ScribdDownloads");
+        if(!ScribdDownloads.exists()) {
+            ScribdDownloads.mkdir();
         }
 
         System.out.print("PDF name: ");
         String fileName = readLine();
-        File pdf = new File(System.getProperty("user.dir") + "/images", fileName + ".pdf");
+        File pdf = new File(System.getProperty("user.dir") + "/ScribdDownloads", fileName + ".pdf");
         document = new Document();
 
         PdfWriter.getInstance(document, new FileOutputStream(pdf));
