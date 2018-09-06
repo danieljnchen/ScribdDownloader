@@ -38,35 +38,33 @@ public class ScribdDownloader {
         String line;
         int page = 1;
 
-        try {
             while ((line = br.readLine()) != null) {
                 String imageURLtext = null;
+                try {
+                    if (line.contains("http://html.scribd.com")) {
+                        imageURLtext = line.substring(line.indexOf("http://"), line.indexOf(".jpg") + 4);
+                        System.out.println(imageURLtext);
+                    }
+                    if (line.contains("contentUrl")) {
+                        line = line.substring(line.indexOf("\"") + 1);
+                        line = line.substring(0, line.indexOf("\""));
+                        URL url = new URL(line);
+                        String subpage = downloadWebpage(url);
+                        imageURLtext = subpage.substring(subpage.indexOf("http://"), subpage.indexOf(".jpg") + 4);
+                        System.out.println(imageURLtext);
+                    }
 
-                if (line.contains("http://html.scribd.com")) {
-                    imageURLtext = line.substring(line.indexOf("http://"), line.indexOf(".jpg") + 4);
-                    System.out.println(imageURLtext);
-                }
-                if (line.contains("contentUrl")) {
-                    line = line.substring(line.indexOf("\"") + 1);
-                    line = line.substring(0, line.indexOf("\""));
-                    URL url = new URL(line);
-                    String subpage = downloadWebpage(url);
-                    imageURLtext = subpage.substring(subpage.indexOf("http://"), subpage.indexOf(".jpg") + 4);
-                    System.out.println(imageURLtext);
-                }
-
-                if (imageURLtext != null) {
-                    downloadImage(new URL(imageURLtext), String.valueOf(page) + ".jpg");
-                    ++page;
+                    if (imageURLtext != null) {
+                        downloadImage(new URL(imageURLtext), String.valueOf(page) + ".jpg");
+                        ++page;
+                    }
+                } catch(Exception e) {
+                    System.out.println(imageURLtext + " is an invalid link.");
                 }
             }
 
             System.out.println("PDF generated.");
-        } catch(Exception e) {
-            System.out.println("Unfortunately, this link is not compatible with this program. Your download was stopped on page " + (page-1) + ".");
-        } finally {
             document.close();
-        }
     }
 
     public static void downloadImage(URL url, String name) throws Exception {
